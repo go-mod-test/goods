@@ -1,0 +1,68 @@
+services:
+
+  adminer:
+    image: adminer:latest
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - appnet
+      - internet
+    depends_on:
+      - db
+
+  db:
+    image: postgres:17.4-alpine
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:${DB_PORT}"
+    volumes:
+      - postgres_db:/var/lib/postgresql/data
+      
+    networks:
+      - appnet
+
+  app:
+    build:
+      context: ../
+      dockerfile: docker/dockerfile
+    env_file: .env
+    container_name: app
+    restart: always
+    depends_on:
+      - db
+    environment:
+      APP_ENV: ${APP_ENV}
+      HTTP_HOST: ${HTTP_HOST}
+      READ_TIMEOUT: ${READ_TIMEOUT}
+      WRITE_TIMEOUT: ${WRITE_TIMEOUT}
+      IDLE_TIMEOUT: ${IDLE_TIMEOUT}
+      HTTP_USER: ${HTTP_USER}
+      HTTP_SERVER_PASSWORD: ${HTTP_SERVER_PASSWORD}
+      DB_HOST: db
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASS}
+      DB_NAME: ${DB_NAME}
+    
+      SSL_MODE: disable
+    ports:
+      - "8082:8082"
+    networks:
+      - internet
+      - appnet
+volumes:
+  postgres_db:
+
+networks:
+  internet:
+    name: internet
+    driver: bridge
+  appnet:
+    name: appnet
+    internal: true

@@ -1,17 +1,30 @@
 package main
 
-/*
+import (
+	"context"
+	"log/slog"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
+
+	"github.com/go-chi/chi"
+	"github.com/go-mod-test/goods/internal/config"
+	"github.com/go-mod-test/goods/internal/handlers"
+	mylogger "github.com/go-mod-test/goods/internal/logger"
+	metric "github.com/go-mod-test/goods/internal/metrics"
+	mwPrometheus "github.com/go-mod-test/goods/internal/middleware/prometheus"
+	"github.com/go-mod-test/goods/internal/storage"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+)
+
 func main() {
+	//config
 	config := config.MustLoadEnvConfig()
 
+	//logger
 	logger := mylogger.SetupLogger(config.Env)
-
-	ctxApp, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM, syscall.SIGINT)
-	defer cancel()
-
-	router := chi.NewRouter()
-
-	m := metrics.NewPrometheus()
 
 	logger.Info(
 		"Starting server",
@@ -19,6 +32,11 @@ func main() {
 	)
 	logger.Debug("Debug message is enabled")
 
+	//ctx
+	ctxApp, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM, syscall.SIGINT)
+	defer cancel()
+
+	// db
 	db, err := storage.NewStorage(config.Db)
 	if err != nil {
 		logger.Error("Error connecting to database:%s", "error", err)
@@ -26,27 +44,42 @@ func main() {
 	}
 	defer db.Db.Close()
 
-	wordDb := postgres.NewWordStorage(logger, db.Db)
-	logger.Debug("Connected to database")
+	//promitheus
 
-	//
-	// mideleware
+	m := metric.NewPrometheus()
+
+	//router
+	router := chi.NewRouter()
+
 	router.Use(mwPrometheus.Prometheus(logger, m))
-	router.Use(middleware.RequestID)
-	router.Use(middleware.RealIP)
-	router.Use(mwLogger.New(logger))
 
-	//alias
-	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("OK"))
-	})
+	//aliases
 	router.Get("/metrics", promhttp.Handler().ServeHTTP)
-	router.Get("/api/get/{word}", handlers.GetWord(logger, wordDb))
-	router.Post("/api/add", handlers.CreateWord(logger, wordDb))
-	router.Delete("/api/delete/{word}", handlers.DeleteWord(logger, wordDb))
-	router.Put("/api/update/{word}", handlers.UpdateWord(logger, wordDb))
-	//
+	//customer
+	router.Get("/customer/all", handlers.GetAllCustomers(logger, db))
+	router.Get("/customer/{id}", handlers.GetOneCustomer(logger, db))
+	router.Post("/customer/create", handlers.CreateCustomer(logger, db))
+	router.Put("/customer/update/{id}", handlers.UpdateCustomer(logger, db))
+	router.Delete("/customer/delete/{id}", handlers.DeleteCustomer(logger, db))
+
+	//product
+	router.Get("/product/all", handlers.GetAllProducts(logger, db))
+	router.Get("/product/{id}", handlers.GetOneProduct(logger, db))
+	router.Post("/product/create", handlers.CreateProduct(logger, db))
+	router.Put("/product/update/{id}", handlers.UpdateProduct(logger, db))
+	router.Delete("/product/delete/{id}", handlers.DeleteProduct(logger, db))
+
+	//invoice
+	router.Get("/invoice/all", handlers.GetAllInvoices(logger, db))
+	router.Get("/invoice/{id}", handlers.GetOneInvoice(logger, db))
+	router.Post("/invoice/create", handlers.CreateInvoice(logger, db))
+	router.Put("/invoice/update/{id}", handlers.UpdateInvoice(logger, db))
+	router.Delete("/invoice/delete/{id}", handlers.DeleteInvoice(logger, db))
+
+	//invoiceItem
+	router.Get("/invoiceItem/{id}", handlers.GetOneInvoiceItem(logger, db))
+	router.Post("/invoiceItem/create", handlers.CreateInvoiceItem(logger, db))
+	router.Delete("/invoiceItem/delete/{id}", handlers.DeleteInvoiceItem(logger, db))
 
 	//server
 	srv := &http.Server{
@@ -81,4 +114,3 @@ func main() {
 	<-serverDone
 	logger.Info("SERVER STOPED")
 }
-*/
