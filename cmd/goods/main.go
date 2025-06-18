@@ -44,17 +44,18 @@ func main() {
 	}
 	defer db.Db.Close()
 
-	//promitheus
-
-	m := metric.NewPrometheus()
-
 	//router
 	router := chi.NewRouter()
 
+	//promitheus
+	m := metric.NewPrometheus()
+
+	// middleware
 	router.Use(mwPrometheus.Prometheus(logger, m))
 
 	//aliases
 	router.Get("/metrics", promhttp.Handler().ServeHTTP)
+
 	//customer
 	router.Get("/customer/all", handlers.GetAllCustomers(logger, db))
 	router.Get("/customer/{id}", handlers.GetOneCustomer(logger, db))
