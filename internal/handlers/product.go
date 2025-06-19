@@ -11,7 +11,7 @@ import (
 	"github.com/go-mod-test/goods/internal/domain/product"
 )
 
-func GetAllProducts(log *slog.Logger, prod product.GetAllProducts) http.HandlerFunc {
+func GetAllProducts(log *slog.Logger, prod product.AllProductsGetter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		const op = "handlers.GetAllProducts"
@@ -43,7 +43,7 @@ func GetAllProducts(log *slog.Logger, prod product.GetAllProducts) http.HandlerF
 	}
 }
 
-func GetOneProduct(log *slog.Logger, prod product.GetOneProduct) http.HandlerFunc {
+func GetOneProduct(log *slog.Logger, prod product.OneProductGetter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "handlers.GetOneProduct"
 		log.Info("get one poduct", "op", op)
@@ -89,7 +89,7 @@ func GetOneProduct(log *slog.Logger, prod product.GetOneProduct) http.HandlerFun
 
 }
 
-func CreateProduct(log *slog.Logger, prod product.CreateProduct) http.HandlerFunc {
+func CreateProduct(log *slog.Logger, prod product.ProductCreater) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "handlers.CreateProduct"
 		log.Info("create Product", "op", op)
@@ -124,7 +124,7 @@ func CreateProduct(log *slog.Logger, prod product.CreateProduct) http.HandlerFun
 
 }
 
-func UpdateProduct(log *slog.Logger, prod product.UpdateProduct) http.HandlerFunc {
+func UpdateProduct(log *slog.Logger, prod product.ProductUpdater) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "handlers.UpdateProduct"
 		log.Info("update Product", "op", op)
@@ -172,7 +172,7 @@ func UpdateProduct(log *slog.Logger, prod product.UpdateProduct) http.HandlerFun
 	}
 }
 
-func DeleteProduct(log *slog.Logger, prod product.DeleteProduct) http.HandlerFunc {
+func DeleteProduct(log *slog.Logger, prod product.ProductDeleter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "handlers.DeleteProduct"
 		log.Info("delete Product", "op", op)

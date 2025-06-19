@@ -11,7 +11,7 @@ import (
 	"github.com/go-mod-test/goods/internal/domain/customer"
 )
 
-func GetAllCustomers(log *slog.Logger, cust customer.GetAllCustom) http.HandlerFunc {
+func GetAllCustomers(log *slog.Logger, cust customer.AllCustomerGetter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		const op = "handlers.GetAllCustomers"
@@ -44,7 +44,7 @@ func GetAllCustomers(log *slog.Logger, cust customer.GetAllCustom) http.HandlerF
 	}
 }
 
-func GetOneCustomer(log *slog.Logger, cust customer.GetOneCustom) http.HandlerFunc {
+func GetOneCustomer(log *slog.Logger, cust customer.OneCustomerGetter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "handlers.GetOneCustomer"
 		log.Info("get one customer")
@@ -90,7 +90,7 @@ func GetOneCustomer(log *slog.Logger, cust customer.GetOneCustom) http.HandlerFu
 	}
 }
 
-func CreateCustomer(log *slog.Logger, cust customer.CreateCustom) http.HandlerFunc {
+func CreateCustomer(log *slog.Logger, cust customer.CustomerCreater) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "handlers.CreateCustomer"
 		log.Info("create customer")
@@ -125,7 +125,7 @@ func CreateCustomer(log *slog.Logger, cust customer.CreateCustom) http.HandlerFu
 	}
 }
 
-func UpdateCustomer(log *slog.Logger, cust customer.UpdateCustom) http.HandlerFunc {
+func UpdateCustomer(log *slog.Logger, cust customer.CustomerUpdater) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "handlers.UpdateCustomer"
 		log.Info("update customer")
@@ -162,7 +162,7 @@ func UpdateCustomer(log *slog.Logger, cust customer.UpdateCustom) http.HandlerFu
 
 		req.ID = id
 
-		err = cust.UpdateCustomer(r.Context(), id, req)
+		err = cust.UpdateCustomer(r.Context(), req)
 		if err != nil {
 			log.Error("error updating", "error", err, "op", op)
 			http.Error(w, "error updating", http.StatusInternalServerError)
@@ -173,7 +173,7 @@ func UpdateCustomer(log *slog.Logger, cust customer.UpdateCustom) http.HandlerFu
 	}
 }
 
-func DeleteCustomer(log *slog.Logger, cust customer.DelOneCustom) http.HandlerFunc {
+func DeleteCustomer(log *slog.Logger, cust customer.OneCustomerDeleter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "handlers.DeleteCustomer"
 		log.Info("delete customer")

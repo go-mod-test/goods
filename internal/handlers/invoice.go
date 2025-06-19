@@ -11,7 +11,7 @@ import (
 	"github.com/go-mod-test/goods/internal/domain/invoice"
 )
 
-func GetAllInvoices(log *slog.Logger, cust invoice.GetAllInvo) http.HandlerFunc {
+func GetAllInvoices(log *slog.Logger, cust invoice.AllInvoiceGetter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		const op = "handlers.GetAllInvoices"
@@ -44,7 +44,7 @@ func GetAllInvoices(log *slog.Logger, cust invoice.GetAllInvo) http.HandlerFunc 
 	}
 }
 
-func GetOneInvoice(log *slog.Logger, cust invoice.GetOneInvo) http.HandlerFunc {
+func GetOneInvoice(log *slog.Logger, cust invoice.OneInvoiceGetter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "handlers.GetOneInvoice"
 		log.Info("get one invoice")
@@ -90,7 +90,7 @@ func GetOneInvoice(log *slog.Logger, cust invoice.GetOneInvo) http.HandlerFunc {
 	}
 }
 
-func CreateInvoice(log *slog.Logger, cust invoice.CreateInvo) http.HandlerFunc {
+func CreateInvoice(log *slog.Logger, cust invoice.InvoiceCreater) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "handlers.CreateInvoice"
 		log.Info("create Invoice")
@@ -125,7 +125,7 @@ func CreateInvoice(log *slog.Logger, cust invoice.CreateInvo) http.HandlerFunc {
 	}
 }
 
-func UpdateInvoice(log *slog.Logger, cust invoice.UpdateInvo) http.HandlerFunc {
+func UpdateInvoice(log *slog.Logger, cust invoice.InvoiceUpdater) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "handlers.UpdateInvoice"
 		log.Info("update Invoice")
@@ -175,7 +175,7 @@ func UpdateInvoice(log *slog.Logger, cust invoice.UpdateInvo) http.HandlerFunc {
 	}
 }
 
-func DeleteInvoice(log *slog.Logger, cust invoice.DelOneInvo) http.HandlerFunc {
+func DeleteInvoice(log *slog.Logger, cust invoice.OneInvoiceDeleter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "handlers.DeleteInvoice"
 		log.Info("delete Invoice")

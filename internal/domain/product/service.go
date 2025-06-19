@@ -6,21 +6,21 @@ import (
 	"github.com/go-mod-test/goods/internal/domain"
 )
 
-type GetAllProducts interface {
+type AllProductsGetter interface {
 	GetAllProducts(ctx context.Context) ([]domain.Product, error)
 }
-type GetOneProduct interface {
+type OneProductGetter interface {
 	GetOneProduct(ctx context.Context, id int) (domain.Product, error)
 }
 
-type CreateProduct interface {
+type ProductCreater interface {
 	CreateProduct(ctx context.Context, product domain.Product) error
 }
 
-type UpdateProduct interface {
+type ProductUpdater interface {
 	UpdateProduct(ctx context.Context, product domain.Product) error
 }
 
-type DeleteProduct interface {
+type ProductDeleter interface {
 	DelOneProduct(ctx context.Context, id int) error
 }

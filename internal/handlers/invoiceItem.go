@@ -11,7 +11,7 @@ import (
 	"github.com/go-mod-test/goods/internal/domain/invoice"
 )
 
-func GetOneInvoiceItem(log *slog.Logger, cust invoice.GetItemInvo) http.HandlerFunc {
+func GetOneInvoiceItem(log *slog.Logger, cust invoice.ItemInvoiceGetter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "handlers.GetOneInvoiceItem"
 		log.Info("get one InvoiceItem")
@@ -56,7 +56,7 @@ func GetOneInvoiceItem(log *slog.Logger, cust invoice.GetItemInvo) http.HandlerF
 	}
 }
 
-func CreateInvoiceItem(log *slog.Logger, cust invoice.AddItemInvo) http.HandlerFunc {
+func CreateInvoiceItem(log *slog.Logger, cust invoice.ItemInvoiceAdder) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "handlers.CreateInvoiceItem"
 		log.Info("create InvoiceItem")
@@ -91,7 +91,7 @@ func CreateInvoiceItem(log *slog.Logger, cust invoice.AddItemInvo) http.HandlerF
 	}
 }
 
-func DeleteInvoiceItem(log *slog.Logger, cust invoice.DelItemInvo) http.HandlerFunc {
+func DeleteInvoiceItem(log *slog.Logger, cust invoice.ItemInvoiceDeleter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "handlers.DeleteInvoiceItem"
 		log.Info("delete InvoiceItem")

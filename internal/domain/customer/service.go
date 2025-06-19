@@ -6,22 +6,22 @@ import (
 	"github.com/go-mod-test/goods/internal/domain"
 )
 
-type GetAllCustom interface {
+type AllCustomerGetter interface {
 	GetAllCustomers(ctx context.Context) ([]domain.Customer, error)
 }
 
-type GetOneCustom interface {
+type OneCustomerGetter interface {
 	GetOneCustomer(ctx context.Context, id int) (domain.Customer, error)
 }
 
-type CreateCustom interface {
+type CustomerCreater interface {
 	CreateCustomer(ctx context.Context, customer domain.Customer) error
 }
 
-type UpdateCustom interface {
-	UpdateCustomer(ctx context.Context, id int, customer domain.Customer) error
+type CustomerUpdater interface {
+	UpdateCustomer(ctx context.Context, customer domain.Customer) error
 }
 
-type DelOneCustom interface {
+type OneCustomerDeleter interface {
 	DelOneCustomer(ctx context.Context, id int) error
 }

@@ -66,12 +66,12 @@ func (s *Storage) CreateCustomer(ctx context.Context, customer domain.Customer) 
 
 	return nil
 }
-func (s *Storage) UpdateCustomer(ctx context.Context, id int, customer domain.Customer) error {
+func (s *Storage) UpdateCustomer(ctx context.Context, customer domain.Customer) error {
 	const op = "storage.UpdateCastomer"
 
 	query := `UPDATE customers SET first_name = $1, last_name = $2 WHERE id = $3`
 
-	_, err := s.Db.ExecContext(ctx, query, customer.FirstName, customer.LastName, id)
+	_, err := s.Db.ExecContext(ctx, query, customer.FirstName, customer.LastName, customer.ID)
 	if err != nil {
 		return fmt.Errorf("%s: %w", op, err)
 	}
