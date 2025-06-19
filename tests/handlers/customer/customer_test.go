@@ -9,6 +9,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/go-chi/chi"
 	"github.com/go-mod-test/goods/internal/domain"
 	"github.com/go-mod-test/goods/internal/handlers"
 	"github.com/stretchr/testify/assert"
@@ -55,7 +56,10 @@ func TestGetOneCustomer(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	handler := handlers.GetOneCustomer(logger, mock)
-	handler.ServeHTTP(w, req)
+
+	router := chi.NewRouter()
+	router.Get("/customer/{id}", handler)
+	router.ServeHTTP(w, req)
 
 	resp := w.Result()
 	defer resp.Body.Close()
@@ -106,7 +110,9 @@ func TestUpdateCustomer(t *testing.T) {
 	mock := &mockCustomerGetter{}
 
 	handler := handlers.UpdateCustomer(logger, mock)
-	handler.ServeHTTP(w, req)
+	router := chi.NewRouter()
+	router.Put("/customer/update/{id}", handler)
+	router.ServeHTTP(w, req)
 
 	resp := w.Result()
 	defer resp.Body.Close()
@@ -124,7 +130,9 @@ func TestDeleteCustomer(t *testing.T) {
 	mock := &mockCustomerGetter{}
 
 	handler := handlers.DeleteCustomer(logger, mock)
-	handler.ServeHTTP(w, req)
+	router := chi.NewRouter()
+	router.Delete("/customer/delete/{id}", handler)
+	router.ServeHTTP(w, req)
 
 	resp := w.Result()
 	defer resp.Body.Close()
