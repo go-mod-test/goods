@@ -6,28 +6,28 @@ import (
 	"github.com/go-mod-test/goods/internal/domain"
 )
 
-type mockCustomerGetter struct {
-	mockData    []domain.Customer
-	oneMockData domain.Customer
+type mockInvoiceGetter struct {
+	mockData    []domain.Invoice
+	oneMockData domain.Invoice
 	err         error
 }
 
-func (m *mockCustomerGetter) GetAllCustomers(_ context.Context) ([]domain.Customer, error) {
+func (m *mockInvoiceGetter) GetAllInvoices(_ context.Context) ([]domain.Invoice, error) {
 	return m.mockData, m.err
 }
 
-func (m *mockCustomerGetter) GetOneCustomer(_ context.Context, _ int) (domain.Customer, error) {
+func (m *mockInvoiceGetter) GetOneInvoice(_ context.Context, _ int) (domain.Invoice, error) {
 	return m.oneMockData, m.err
 }
 
-func (m *mockCustomerGetter) CreateCustomer(_ context.Context, _ domain.Customer) error {
+func (m *mockInvoiceGetter) CreateInvoice(_ context.Context, _ domain.Invoice) error {
 	return m.err
 }
 
-func (m *mockCustomerGetter) UpdateCustomer(_ context.Context, _ domain.Customer) error {
+func (m *mockInvoiceGetter) UpdateInvoice(_ context.Context, _ domain.Invoice) error {
 	return m.err
 }
 
-func (m *mockCustomerGetter) DelOneCustomer(_ context.Context, _ int) error {
+func (m *mockInvoiceGetter) DelOneInvoice(_ context.Context, _ int) error {
 	return m.err
 }
